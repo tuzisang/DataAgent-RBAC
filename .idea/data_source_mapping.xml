@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/data-agent-management/src/main/resources/sql/schema.sql" value="6657bdab-8b3b-4838-acad-64a5cde0cc31" />
+  </component>
+</project>

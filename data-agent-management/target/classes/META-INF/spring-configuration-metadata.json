@@ -1,0 +1,474 @@
+{
+  "groups": [
+    {
+      "name": "spring.ai.alibaba.data-agent",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.embedding-batch",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$EmbeddingBatch",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.oss",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.langfuse",
+      "type": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.report-template",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$ReportTemplate",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.paragraph",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$ParagraphTextSplitterConfig",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.recursive",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$RecursiveTextSplitterConfig",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.semantic",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$SemanticTextSplitterConfig",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.sentence",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$SentenceTextSplitterConfig",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.token",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$TokenTextSplitterConfig",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store",
+      "type": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.code-pool-executor",
+      "type": "com.alibaba.cloud.ai.dataagent.enums.CodePoolExecutorEnum",
+      "description": "Specify implementation class of code container pool runtime service",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.code-timeout",
+      "type": "java.lang.String",
+      "description": "Python code execution time limit",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.container-name-prefix",
+      "type": "java.lang.String",
+      "description": "Container name prefix",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.container-timeout",
+      "type": "java.lang.Long",
+      "description": "Maximum container runtime",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.core-container-num",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of core containers",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.core-thread-size",
+      "type": "java.lang.Integer",
+      "description": "Core thread count of thread pool",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.cpu-core",
+      "type": "java.lang.Long",
+      "description": "Number of container CPU cores",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.host",
+      "type": "java.lang.String",
+      "description": "Service host, use default address if null",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.image-name",
+      "type": "java.lang.String",
+      "description": "Image name, can customize image with common third-party dependencies to replace this configuration",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.keep-thread-alive-time",
+      "type": "java.lang.Long",
+      "description": "Task survival time of thread pool, in seconds",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.limit-memory",
+      "type": "java.lang.Long",
+      "description": "Maximum container memory, in MB",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.max-thread-size",
+      "type": "java.lang.Integer",
+      "description": "Maximum thread count of thread pool",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.network-mode",
+      "type": "java.lang.String",
+      "description": "Container network mode",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.python-max-tries-count",
+      "type": "java.lang.Integer",
+      "description": "Python执行的最大重试次数",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.task-queue-size",
+      "type": "java.lang.Integer",
+      "description": "Task blocking queue size",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.temp-container-alive-time",
+      "type": "java.lang.Integer",
+      "description": "Survival time of temporary containers, in minutes",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.temp-container-num",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of temporary containers",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.code-executor.thread-queue-size",
+      "type": "java.lang.Integer",
+      "description": "Task blocking queue size of thread pool",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.CodeExecutorProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.embedding-batch.encoding-type",
+      "type": "java.lang.String",
+      "description": "encodingType 默认值：cl100k_base，适用于OpenAI等模型",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$EmbeddingBatch"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.embedding-batch.max-text-count",
+      "type": "java.lang.Integer",
+      "description": "每批次最大文本数量 适用于DashScope等有文本数量限制的API DashScope限制为10",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$EmbeddingBatch"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.embedding-batch.max-token-count",
+      "type": "java.lang.Integer",
+      "description": "每批次最大令牌数 值越小，每批次文档越少，但更安全 值越大，处理效率越高，但可能超出API限制 建议值：2000-8000，根据实际API限制调整",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$EmbeddingBatch"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.embedding-batch.reserve-percentage",
+      "type": "java.lang.Double",
+      "description": "预留百分比 用于预留缓冲空间，避免超出限制 建议值：0.1-0.2（10%-20%）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$EmbeddingBatch"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.enable-sql-result-chart",
+      "type": "java.lang.Boolean",
+      "description": "是否启用SQL执行结果图表判断，默认启用",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.enrich-sql-result-timeout",
+      "type": "java.lang.Long",
+      "description": "执行SQL结果图表化超时时间，默认3000ms",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.image-size",
+      "type": "java.lang.Long",
+      "description": "头像图片大小上限（字节）。默认 2MB。",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.oss.access-key-id",
+      "type": "java.lang.String",
+      "description": "OSS访问密钥ID",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.oss.access-key-secret",
+      "type": "java.lang.String",
+      "description": "OSS访问密钥Secret",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.oss.bucket-name",
+      "type": "java.lang.String",
+      "description": "OSS存储桶名称",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.oss.custom-domain",
+      "type": "java.lang.String",
+      "description": "自定义域名（可选）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.oss.endpoint",
+      "type": "java.lang.String",
+      "description": "OSS端点地址",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.OssStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.path",
+      "type": "java.lang.String",
+      "description": "本地上传目录路径。",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.path-prefix",
+      "type": "java.lang.String",
+      "description": "对象存储路径前缀（通用配置，对OSS和本地存储都适用）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.type",
+      "type": "com.alibaba.cloud.ai.dataagent.service.file.FileStorageServiceEnum",
+      "description": "存储类型：local（本地存储）、oss（阿里云OSS）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.file.url-prefix",
+      "type": "java.lang.String",
+      "description": "对外暴露的访问前缀。",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.langfuse.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.langfuse.host",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.langfuse.public-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.langfuse.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.langfuse.tracer-provider",
+      "type": "io.opentelemetry.sdk.trace.SdkTracerProvider",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.config.OpenTelemetryConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.llm-service-type",
+      "type": "com.alibaba.cloud.ai.dataagent.service.llm.LlmServiceEnum",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.max-columns-per-table",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.max-sql-optimize-count",
+      "type": "java.lang.Integer",
+      "description": "sql优化最多次数",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.max-sql-retry-count",
+      "type": "java.lang.Integer",
+      "description": "sql执行失败重试次数",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.maxplanlength",
+      "type": "java.lang.Integer",
+      "description": "单次规划最大长度限制",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.maxturnhistory",
+      "type": "java.lang.Integer",
+      "description": "最多保留的对话轮数",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.report-template.echarts-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$ReportTemplate"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.report-template.marked-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$ReportTemplate"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.sql-score-threshold",
+      "type": "java.lang.Double",
+      "description": "sql优化分数阈值",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.chunk-size",
+      "type": "java.lang.Integer",
+      "description": "默认分块大小，基于token数量 默认值：1000",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.paragraph.paragraph-overlap-chars",
+      "type": "java.lang.Integer",
+      "description": "段落重叠字符数 默认值：200（保留前一个分块的最后200个字符，而非段落数量）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$ParagraphTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.recursive.chunk-overlap",
+      "type": "java.lang.Integer",
+      "description": "重叠区域字符数 默认值：200",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$RecursiveTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.recursive.separators",
+      "type": "java.lang.String[]",
+      "description": "分隔符列表（如果为 null，该类内部有默认的分隔符列表）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$RecursiveTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.semantic.max-chunk-size",
+      "type": "java.lang.Integer",
+      "description": "最大分块大小 默认值：1000",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$SemanticTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.semantic.min-chunk-size",
+      "type": "java.lang.Integer",
+      "description": "最小分块大小 默认值：200",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$SemanticTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.semantic.similarity-threshold",
+      "type": "java.lang.Double",
+      "description": "语义相似度阈值 默认值：0.5（0-1之间，越低越容易分块）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$SemanticTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.sentence.sentence-overlap",
+      "type": "java.lang.Integer",
+      "description": "句子重叠数量 默认值：1（保留前一个分块的最后1个句子）",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$SentenceTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.token.keep-separator",
+      "type": "java.lang.Boolean",
+      "description": "是否保留分隔符 默认值：true",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$TokenTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.token.max-num-chunks",
+      "type": "java.lang.Integer",
+      "description": "最大分块数量 默认值：5000",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$TokenTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.token.min-chunk-length-to-embed",
+      "type": "java.lang.Integer",
+      "description": "嵌入最小分块长度 默认值：10",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$TokenTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.text-splitter.token.min-chunk-size-chars",
+      "type": "java.lang.Integer",
+      "description": "最小分块字符数 默认值：400",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$TextSplitter$TokenTextSplitterConfig"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.batch-del-topk-limit",
+      "type": "java.lang.Integer",
+      "description": "一次删除操作中，最多删除的文档数量",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.default-similarity-threshold",
+      "type": "java.lang.Double",
+      "description": "相似度阈值配置，用于过滤相似度分数大于等于此阈值的文档",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.default-topk-limit",
+      "type": "java.lang.Integer",
+      "description": "查询时返回的最大文档数量",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.elasticsearch-min-score",
+      "type": "java.lang.Double",
+      "description": "Elasticsearch最小分数阈值，用于es执行关键词搜索时过滤相关性较低的文档",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.enable-hybrid-search",
+      "type": "java.lang.Boolean",
+      "description": "是否启用混合搜索",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.file-path",
+      "type": "java.lang.String",
+      "description": "SimpleVectorStore本地序列化文件地址",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.table-similarity-threshold",
+      "type": "java.lang.Double",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    },
+    {
+      "name": "spring.ai.alibaba.data-agent.vector-store.table-topk-limit",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dataagent.properties.DataAgentProperties$VectorStoreProperties"
+    }
+  ],
+  "hints": []
+}
