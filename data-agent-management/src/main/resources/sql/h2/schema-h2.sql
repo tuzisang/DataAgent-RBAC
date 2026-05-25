@@ -245,6 +245,18 @@ CREATE TABLE IF NOT EXISTS agent_datasource_tables
     ) ENGINE = InnoDB COMMENT = '某个智能体某个数据源所选中的数据表';
 
 
+-- 用户-Agent可见性分配表
+CREATE TABLE IF NOT EXISTS sys_user_agent_visibility (
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL COMMENT '用户ID',
+    agent_id INT NOT NULL COMMENT '智能体ID',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_user_agent (user_id, agent_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_agent_id (agent_id)
+);
+
 -- 模型配置表
 CREATE TABLE IF NOT EXISTS `model_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

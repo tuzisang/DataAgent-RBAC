@@ -49,7 +49,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" />
-            <el-table-column label="操作" width="280">
+            <el-table-column label="操作" width="370">
               <template #default="{ row }">
                 <el-button
                   :type="row.status === 1 ? 'danger' : 'success'"
@@ -60,6 +60,7 @@
                 </el-button>
                 <el-button size="small" @click="showResetPassword(row)">重置密码</el-button>
                 <el-button size="small" @click="showAssignRole(row)">分配角色</el-button>
+                <el-button size="small" @click="showAssignAgent(row)">分配Agent</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -120,6 +121,30 @@
         <el-button type="primary" :loading="submitting" @click="handleAssignRole">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 分配Agent可见性弹窗 -->
+    <el-dialog v-model="agentDialogVisible" title="分配Agent可见性" width="520px">
+      <div class="dialog-form">
+        <div class="form-item">
+          <label>选择该用户可查看的Agent</label>
+          <el-select v-model="agentForm.agentIds" multiple placeholder="请选择Agent" style="width: 100%">
+            <el-option v-for="agent in allAgents" :key="agent.id" :label="agent.name" :value="agent.id">
+              <span>{{ agent.name }}</span>
+              <el-tag size="small" style="margin-left: 8px;" :type="agent.status === 'published' ? 'success' : 'info'">
+                {{ agent.status === 'published' ? '已发布' : agent.status }}
+              </el-tag>
+            </el-option>
+          </el-select>
+        </div>
+        <p style="color: #909399; font-size: 12px; margin: 0;">
+          提示：用户始终可以查看所有已发布的Agent和自己创建的Agent，此处配置的是额外可见的Agent。
+        </p>
+      </div>
+      <template #footer>
+        <el-button @click="agentDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="submitting" @click="handleAssignAgent">确定</el-button>
+      </template>
+    </el-dialog>
   </BaseLayout>
 </template>
 
@@ -143,6 +168,10 @@ const resetForm = reactive({ userId: null, password: '' });
 
 const roleDialogVisible = ref(false);
 const roleForm = reactive({ userId: null, roleIds: [] });
+
+const agentDialogVisible = ref(false);
+const agentForm = reactive({ userId: null, agentIds: [] });
+const allAgents = ref([]);
 
 const loadUsers = async () => {
   loading.value = true;
@@ -245,9 +274,42 @@ const handleAssignRole = async () => {
   }
 };
 
+const loadAllAgents = async () => {
+  try {
+    allAgents.value = await adminService.listAllAgents();
+  } catch (e) {
+    console.error('获取Agent列表失败', e);
+  }
+};
+
+const showAssignAgent = async (row) => {
+  agentForm.userId = row.id;
+  agentForm.agentIds = [];
+  agentDialogVisible.value = true;
+  try {
+    agentForm.agentIds = await adminService.getUserAgentVisibility(row.id);
+  } catch (e) {
+    console.error('获取用户Agent可见性失败', e);
+  }
+};
+
+const handleAssignAgent = async () => {
+  submitting.value = true;
+  try {
+    await adminService.updateUserAgentVisibility(agentForm.userId, agentForm.agentIds);
+    ElMessage.success('Agent可见性分配成功');
+    agentDialogVisible.value = false;
+  } catch (e) {
+    ElMessage.error(e.message || '分配失败');
+  } finally {
+    submitting.value = false;
+  }
+};
+
 onMounted(() => {
   loadUsers();
   loadRoles();
+  loadAllAgents();
 });
 </script>
 

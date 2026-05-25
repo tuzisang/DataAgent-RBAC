@@ -34,6 +34,16 @@ public interface AgentMapper {
 	Agent findById(Long id);
 
 	@Select("""
+			<script>
+				SELECT COUNT(*) FROM agent WHERE id IN
+				<foreach collection='ids' item='id' open='(' separator=',' close=')'>
+					#{id}
+				</foreach>
+			</script>
+			""")
+	int countByIds(@Param("ids") List<Long> ids);
+
+	@Select("""
 			SELECT * FROM agent WHERE status = #{status} ORDER BY create_time DESC
 			""")
 	List<Agent> findByStatus(String status);
@@ -118,21 +128,22 @@ public interface AgentMapper {
 
 	@Select("""
 			<script>
-				SELECT * FROM agent
+				SELECT DISTINCT a.* FROM agent a
 				<where>
 					<if test='status != null and status != ""'>
-						AND status = #{status}
+						AND a.status = #{status}
 					</if>
 					<if test='keyword != null and keyword != ""'>
-						AND (name LIKE CONCAT('%', #{keyword}, '%')
-							 OR description LIKE CONCAT('%', #{keyword}, '%')
-							 OR tags LIKE CONCAT('%', #{keyword}, '%'))
+						AND (a.name LIKE CONCAT('%', #{keyword}, '%')
+							 OR a.description LIKE CONCAT('%', #{keyword}, '%')
+							 OR a.tags LIKE CONCAT('%', #{keyword}, '%'))
 					</if>
 					<if test='createdBy != null'>
-						AND created_by = #{createdBy}
+						AND (a.status = 'published' OR a.created_by = #{createdBy}
+							 OR a.id IN (SELECT agent_id FROM sys_user_agent_visibility WHERE user_id = #{createdBy}))
 					</if>
 				</where>
-				ORDER BY create_time DESC
+				ORDER BY a.create_time DESC
 			</script>
 			""")
 	List<Agent> findByConditionsWithCreator(@Param("status") String status, @Param("keyword") String keyword, @Param("createdBy") Long createdBy);

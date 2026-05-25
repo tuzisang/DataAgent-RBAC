@@ -31,6 +31,7 @@ export interface SysPermission {
   action: string;
 }
 
+const AGENT_BASE = '/api/agent';
 const ADMIN_BASE = '/api/admin';
 
 class AdminService {
@@ -121,6 +122,32 @@ class AdminService {
       return response.data.data;
     }
     throw new Error(response.data.message || '获取权限列表失败');
+  }
+
+  // Agent Visibility
+  async listAllAgents(): Promise<{ id: number; name: string; status: string }[]> {
+    const response = await axios.get<{ id: number; name: string; status: string }[]>(`${AGENT_BASE}/list`);
+    return response.data;
+  }
+
+  async getUserAgentVisibility(userId: number): Promise<number[]> {
+    const response = await axios.get<ApiResponse<number[]>>(
+      `${ADMIN_BASE}/users/${userId}/agent-visibility`,
+    );
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || '获取Agent可见性失败');
+  }
+
+  async updateUserAgentVisibility(userId: number, agentIds: number[]): Promise<void> {
+    const response = await axios.put<ApiResponse<void>>(
+      `${ADMIN_BASE}/users/${userId}/agent-visibility`,
+      agentIds,
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || '更新Agent可见性失败');
+    }
   }
 }
 

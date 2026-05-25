@@ -18,6 +18,7 @@ package com.alibaba.cloud.ai.dataagent.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.cloud.ai.dataagent.entity.Agent;
+import com.alibaba.cloud.ai.dataagent.mapper.SysUserAgentVisibilityMapper;
 import com.alibaba.cloud.ai.dataagent.service.agent.AgentService;
 import com.alibaba.cloud.ai.dataagent.vo.ApiKeyResponse;
 import com.alibaba.cloud.ai.dataagent.vo.ApiResponse;
@@ -45,6 +46,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AgentController {
 
 	private final AgentService agentService;
+	private final SysUserAgentVisibilityMapper sysUserAgentVisibilityMapper;
 
 	private boolean isAdmin() {
 		List<String> roles = StpUtil.getRoleList();
@@ -59,6 +61,24 @@ public class AgentController {
 		if (agent.getCreatedBy() == null || !agent.getCreatedBy().equals(userId)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "无权操作此资源");
 		}
+	}
+
+	private void checkViewable(Agent agent) {
+		if (isAdmin()) {
+			return;
+		}
+		if ("published".equals(agent.getStatus())) {
+			return;
+		}
+		Long userId = Long.valueOf(StpUtil.getLoginId().toString());
+		if (agent.getCreatedBy() != null && agent.getCreatedBy().equals(userId)) {
+			return;
+		}
+		List<Long> visibleAgentIds = sysUserAgentVisibilityMapper.findAgentIdsByUserId(userId);
+		if (visibleAgentIds.contains(agent.getId())) {
+			return;
+		}
+		throw new ResponseStatusException(HttpStatus.FORBIDDEN, "无权查看此资源");
 	}
 
 	/** Get agent list */
@@ -90,7 +110,7 @@ public class AgentController {
 	@SaCheckPermission("agent:view")
 	public Agent get(@PathVariable Long id) {
 		Agent agent = checkAgentExists(id);
-		checkOwnership(agent);
+		checkViewable(agent);
 		return agent;
 	}
 

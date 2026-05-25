@@ -18,10 +18,13 @@ package com.alibaba.cloud.ai.dataagent.controller;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.cloud.ai.dataagent.entity.SysUser;
+import com.alibaba.cloud.ai.dataagent.mapper.AgentMapper;
+import com.alibaba.cloud.ai.dataagent.mapper.SysUserAgentVisibilityMapper;
 import com.alibaba.cloud.ai.dataagent.service.rbac.UserRoleService;
 import com.alibaba.cloud.ai.dataagent.service.rbac.UserService;
 import com.alibaba.cloud.ai.dataagent.vo.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +38,8 @@ public class AdminUserController {
 
 	private final UserService userService;
 	private final UserRoleService userRoleService;
+	private final SysUserAgentVisibilityMapper sysUserAgentVisibilityMapper;
+	private final AgentMapper agentMapper;
 
 	@GetMapping
 	public ApiResponse<List<SysUser>> list() {
@@ -82,6 +87,29 @@ public class AdminUserController {
 		// 刷新该用户的登录状态权限
 		StpUtil.logout(id);
 		return ApiResponse.success("角色分配成功");
+	}
+
+	@GetMapping("/{id}/agent-visibility")
+	public ApiResponse<List<Long>> getAgentVisibility(@PathVariable Long id) {
+		return ApiResponse.success(sysUserAgentVisibilityMapper.findAgentIdsByUserId(id));
+	}
+
+	@PutMapping("/{id}/agent-visibility")
+	@Transactional
+	public ApiResponse<Void> updateAgentVisibility(@PathVariable Long id, @RequestBody List<Long> agentIds) {
+		if (agentIds != null && !agentIds.isEmpty()) {
+			int validCount = agentMapper.countByIds(agentIds);
+			if (validCount != agentIds.size()) {
+				return ApiResponse.error(400, "部分Agent不存在");
+			}
+		}
+		sysUserAgentVisibilityMapper.deleteByUserId(id);
+		if (agentIds != null) {
+			for (Long agentId : agentIds) {
+				sysUserAgentVisibilityMapper.insert(id, agentId);
+			}
+		}
+		return ApiResponse.success("Agent可见性分配成功");
 	}
 
 }
