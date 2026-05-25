@@ -66,8 +66,8 @@ public interface AgentMapper {
 	List<Agent> findByConditions(@Param("status") String status, @Param("keyword") String keyword);
 
 	@Insert("""
-			INSERT INTO agent (name, description, avatar, status, api_key, api_key_enabled, prompt, category, admin_id, tags, create_time, update_time)
-			VALUES (#{name}, #{description}, #{avatar}, #{status}, #{apiKey}, #{apiKeyEnabled}, #{prompt}, #{category}, #{adminId}, #{tags}, #{createTime}, #{updateTime})
+			INSERT INTO agent (name, description, avatar, status, api_key, api_key_enabled, prompt, category, admin_id, created_by, tags, create_time, update_time)
+			VALUES (#{name}, #{description}, #{avatar}, #{status}, #{apiKey}, #{apiKeyEnabled}, #{prompt}, #{category}, #{adminId}, #{createdBy}, #{tags}, #{createTime}, #{updateTime})
 			""")
 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
 	int insert(Agent agent);
