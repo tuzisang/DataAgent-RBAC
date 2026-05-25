@@ -38,6 +38,16 @@
                 </el-tag>
               </template>
             </el-table-column>
+            <el-table-column label="角色" min-width="150">
+              <template #default="{ row }">
+                <template v-if="row.roles && row.roles.length > 0">
+                  <el-tag v-for="role in row.roles" :key="role.id" size="small" type="info" style="margin-right: 4px;">
+                    {{ role.roleName }}
+                  </el-tag>
+                </template>
+                <span v-else style="color: #c0c4cc;">无角色</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="createTime" label="创建时间" />
             <el-table-column label="操作" width="280">
               <template #default="{ row }">

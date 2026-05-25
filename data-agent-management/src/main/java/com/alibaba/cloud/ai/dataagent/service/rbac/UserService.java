@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.service.rbac;
 
 import com.alibaba.cloud.ai.dataagent.entity.SysUser;
+import com.alibaba.cloud.ai.dataagent.mapper.SysRoleMapper;
 import com.alibaba.cloud.ai.dataagent.mapper.SysUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,10 +29,15 @@ import java.util.List;
 public class UserService {
 
 	private final SysUserMapper sysUserMapper;
+	private final SysRoleMapper sysRoleMapper;
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	public List<SysUser> findAll() {
-		return sysUserMapper.findAll();
+		List<SysUser> users = sysUserMapper.findAll();
+		for (SysUser user : users) {
+			user.setRoles(sysRoleMapper.findByUserId(user.getId()));
+		}
+		return users;
 	}
 
 	public SysUser getById(Long id) {

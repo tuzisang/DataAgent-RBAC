@@ -13,6 +13,7 @@ export interface SysUser {
   status: number;
   createTime: string;
   updateTime: string;
+  roles: SysRole[];
 }
 
 export interface SysRole {
