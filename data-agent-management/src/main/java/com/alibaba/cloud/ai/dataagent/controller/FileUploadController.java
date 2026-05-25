@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.properties.FileStorageProperties;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.service.file.FileStorageService;
 import com.alibaba.cloud.ai.dataagent.vo.UploadResponse;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -27,7 +28,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +45,6 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RestController
 @RequestMapping("/api/upload")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class FileUploadController {
 
@@ -57,6 +56,7 @@ public class FileUploadController {
 	 * 上传头像图片
 	 */
 	@PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@SaCheckPermission("file:upload")
 	public Mono<ResponseEntity<UploadResponse>> uploadAvatar(@RequestPart("file") FilePart file) {
 		// 验证文件类型
 		String contentType = file.headers().getContentType() != null ? file.headers().getContentType().toString()
@@ -86,6 +86,7 @@ public class FileUploadController {
 	 * 获取文件
 	 */
 	@GetMapping("/**")
+	@SaCheckPermission("file:view")
 	public ResponseEntity<byte[]> getFile(ServerHttpRequest request) {
 		try {
 			String requestMapPath = this.getClass().getAnnotation(RequestMapping.class).value()[0];

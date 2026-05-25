@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.dto.datasource.ToggleDatasourceDTO;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.dto.datasource.UpdateDatasourceTablesDTO;
 import com.alibaba.cloud.ai.dataagent.entity.AgentDatasource;
 import com.alibaba.cloud.ai.dataagent.exception.InternalServerException;
@@ -36,7 +37,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/agent/{agentId}/datasources")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class AgentDatasourceController {
 
@@ -47,6 +47,7 @@ public class AgentDatasourceController {
 	 * Information Source" function on the frontend
 	 */
 	@PostMapping("/init")
+	@SaCheckPermission("agent-datasource:create")
 	public ApiResponse<?> initSchema(@PathVariable Long agentId) {
 		// 防止前端恶意请求，dto数据应该在后端获取
 		try {
@@ -86,6 +87,7 @@ public class AgentDatasourceController {
 
 	/** Get list of data sources configured for agent */
 	@GetMapping
+	@SaCheckPermission("agent-datasource:view")
 	public ApiResponse<List<AgentDatasource>> getAgentDatasource(@PathVariable Long agentId) {
 		try {
 			log.info("Getting datasources for agent: {}", agentId);
@@ -100,6 +102,7 @@ public class AgentDatasourceController {
 	}
 
 	@GetMapping("/active")
+	@SaCheckPermission("agent-datasource:view")
 	public ApiResponse<AgentDatasource> getActiveAgentDatasource(@PathVariable Long agentId) {
 		try {
 			log.info("Getting active datasource for agent: {}", agentId);
@@ -114,6 +117,7 @@ public class AgentDatasourceController {
 
 	/** Add data source for agent */
 	@PostMapping("/{datasourceId}")
+	@SaCheckPermission("agent-datasource:create")
 	public ApiResponse<AgentDatasource> addDatasourceToAgent(@PathVariable Long agentId,
 			@PathVariable Integer datasourceId) {
 		try {
@@ -131,6 +135,7 @@ public class AgentDatasourceController {
 
 	// 更新选择的数据表
 	@PostMapping("/tables")
+	@SaCheckPermission("agent-datasource:update")
 	public ApiResponse<?> updateDatasourceTables(@PathVariable Long agentId,
 			@RequestBody @Validated UpdateDatasourceTablesDTO dto) {
 		try {
@@ -146,6 +151,7 @@ public class AgentDatasourceController {
 
 	/** Remove data source association from agent */
 	@DeleteMapping("/{datasourceId}")
+	@SaCheckPermission("agent-datasource:delete")
 	public ApiResponse<?> removeDatasourceFromAgent(@PathVariable Long agentId, @PathVariable Integer datasourceId) {
 		try {
 			agentDatasourceService.removeDatasourceFromAgent(agentId, datasourceId);
@@ -158,6 +164,7 @@ public class AgentDatasourceController {
 
 	/** 启用/禁用智能体的数据源 */
 	@PutMapping("/toggle")
+	@SaCheckPermission("agent-datasource:update")
 	public ApiResponse<AgentDatasource> toggleDatasourceForAgent(@PathVariable Long agentId,
 			@RequestBody ToggleDatasourceDTO dto) {
 		try {

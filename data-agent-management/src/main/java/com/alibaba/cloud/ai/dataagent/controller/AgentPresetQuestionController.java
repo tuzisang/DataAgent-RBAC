@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.entity.AgentPresetQuestion;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.service.agent.AgentPresetQuestionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,6 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/agent")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 // todo: 部分返回值和参数需要定义DTO
 public class AgentPresetQuestionController {
@@ -39,6 +39,7 @@ public class AgentPresetQuestionController {
 	 * Get preset question list of agent
 	 */
 	@GetMapping("/{agentId}/preset-questions")
+	@SaCheckPermission("preset-question:view")
 	public ResponseEntity<List<AgentPresetQuestion>> getPresetQuestions(@PathVariable(value = "agentId") Long agentId) {
 		try {
 			List<AgentPresetQuestion> questions = presetQuestionService.findAllByAgentId(agentId);
@@ -54,6 +55,7 @@ public class AgentPresetQuestionController {
 	 * Batch save preset questions of agent
 	 */
 	@PostMapping("/{agentId}/preset-questions")
+	@SaCheckPermission("preset-question:create")
 	public ResponseEntity<Map<String, String>> savePresetQuestions(@PathVariable(value = "agentId") Long agentId,
 			@RequestBody List<Map<String, Object>> questionsData) {
 		try {
@@ -86,6 +88,7 @@ public class AgentPresetQuestionController {
 	 * Delete preset question
 	 */
 	@DeleteMapping("/{agentId}/preset-questions/{questionId}")
+	@SaCheckPermission("preset-question:delete")
 	public ResponseEntity<Map<String, String>> deletePresetQuestion(@PathVariable(value = "agentId") Long agentId,
 			@PathVariable Long questionId) {
 		try {

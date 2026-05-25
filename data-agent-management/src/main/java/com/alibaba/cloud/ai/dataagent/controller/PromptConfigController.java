@@ -15,6 +15,7 @@
  */
 package com.alibaba.cloud.ai.dataagent.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.dto.prompt.PromptConfigDTO;
 import com.alibaba.cloud.ai.dataagent.entity.UserPromptConfig;
 import com.alibaba.cloud.ai.dataagent.service.prompt.UserPromptService;
@@ -34,7 +35,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/prompt-config")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class PromptConfigController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PromptConfigController.class);
@@ -51,6 +51,7 @@ public class PromptConfigController {
 	 * @return operation result
 	 */
 	@PostMapping("/save")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> saveConfig(@RequestBody PromptConfigDTO configDTO) {
 		logger.info("保存提示词优化配置请求：{}", configDTO);
 
@@ -70,6 +71,7 @@ public class PromptConfigController {
 	 * @return configuration information
 	 */
 	@GetMapping("/{id}")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> getConfig(@PathVariable(value = "id") String id) {
 		UserPromptConfig config = promptConfigService.getConfigById(id);
 
@@ -91,6 +93,7 @@ public class PromptConfigController {
 	 * @return configuration list
 	 */
 	@GetMapping("/list")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> getAllConfigs() {
 		List<UserPromptConfig> configs = promptConfigService.getAllConfigs();
 
@@ -109,6 +112,7 @@ public class PromptConfigController {
 	 * @return configuration list
 	 */
 	@GetMapping("/list-by-type/{promptType}")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> getConfigsByType(@PathVariable(value = "promptType") String promptType,
 			@RequestParam(value = "agentId", required = false) Long agentId) {
 		List<UserPromptConfig> configs = promptConfigService.getConfigsByType(promptType, agentId);
@@ -128,6 +132,7 @@ public class PromptConfigController {
 	 * @return currently enabled configuration
 	 */
 	@GetMapping("/active/{promptType}")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> getActiveConfig(@PathVariable(value = "promptType") String promptType,
 			@RequestParam(value = "agentId", required = false) Long agentId) {
 		UserPromptConfig config = promptConfigService.getActiveConfigByType(promptType, agentId);
@@ -147,6 +152,7 @@ public class PromptConfigController {
 	 * @return 启用的优化配置列表
 	 */
 	@GetMapping("/active-all/{promptType}")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> getActiveConfigs(@PathVariable(value = "promptType") String promptType,
 			@RequestParam(value = "agentId", required = false) Long agentId) {
 		List<UserPromptConfig> configs = promptConfigService.getActiveConfigsByType(promptType, agentId);
@@ -166,6 +172,7 @@ public class PromptConfigController {
 	 * @return operation result
 	 */
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> deleteConfig(@PathVariable(value = "id") String id) {
 		boolean deleted = promptConfigService.deleteConfig(id);
 
@@ -188,6 +195,7 @@ public class PromptConfigController {
 	 * @return operation result
 	 */
 	@PostMapping("/{id}/enable")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> enableConfig(@PathVariable(value = "id") String id) {
 		boolean enabled = promptConfigService.enableConfig(id);
 
@@ -210,6 +218,7 @@ public class PromptConfigController {
 	 * @return operation result
 	 */
 	@PostMapping("/{id}/disable")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> disableConfig(@PathVariable(value = "id") String id) {
 		boolean disabled = promptConfigService.disableConfig(id);
 
@@ -231,6 +240,7 @@ public class PromptConfigController {
 	 * @return prompt type list
 	 */
 	@GetMapping("/types")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> getSupportedPromptTypes() {
 		// Supported prompt types
 		String[] types = { "report-generator", "planner", "sql-generator", "python-generator", "rewrite" };
@@ -248,6 +258,7 @@ public class PromptConfigController {
 	 * @return 操作结果
 	 */
 	@PostMapping("/batch-enable")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> batchEnableConfigs(@RequestBody List<String> ids) {
 		boolean success = promptConfigService.enableConfigs(ids);
 
@@ -270,6 +281,7 @@ public class PromptConfigController {
 	 * @return 操作结果
 	 */
 	@PostMapping("/batch-disable")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> batchDisableConfigs(@RequestBody List<String> ids) {
 		boolean success = promptConfigService.disableConfigs(ids);
 
@@ -293,6 +305,7 @@ public class PromptConfigController {
 	 * @return 操作结果
 	 */
 	@PostMapping("/{id}/priority")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> updatePriority(@PathVariable(value = "id") String id,
 			@RequestBody Map<String, Object> requestBody) {
 		Integer priority = (Integer) requestBody.get("priority");
@@ -318,6 +331,7 @@ public class PromptConfigController {
 	 * @return 操作结果
 	 */
 	@PostMapping("/{id}/display-order")
+	@SaCheckPermission("prompt-config:manage")
 	public ResponseEntity<Map<String, Object>> updateDisplayOrder(@PathVariable(value = "id") String id,
 			@RequestBody Map<String, Object> requestBody) {
 		Integer displayOrder = (Integer) requestBody.get("displayOrder");

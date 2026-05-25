@@ -18,6 +18,7 @@ package com.alibaba.cloud.ai.dataagent.controller;
 import com.alibaba.cloud.ai.dataagent.dto.datasource.DatasourceTypeDTO;
 import com.alibaba.cloud.ai.dataagent.dto.schema.CreateLogicalRelationDTO;
 import com.alibaba.cloud.ai.dataagent.dto.schema.UpdateLogicalRelationDTO;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.entity.Datasource;
 import com.alibaba.cloud.ai.dataagent.entity.LogicalRelation;
 import com.alibaba.cloud.ai.dataagent.enums.BizDataSourceTypeEnum;
@@ -33,7 +34,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +49,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @RestController
 @RequestMapping("/api/datasource")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class DatasourceController {
 
@@ -59,6 +58,7 @@ public class DatasourceController {
 	 * Get all data source list
 	 */
 	@GetMapping("/types")
+	@SaCheckPermission("datasource:view")
 	public ApiResponse<List<DatasourceTypeDTO>> getDatasourceTypes() {
 		// 定义标准的 JDBC 数据源类型
 		List<BizDataSourceTypeEnum> standardTypes = Arrays.asList(BizDataSourceTypeEnum.MYSQL,
@@ -82,6 +82,7 @@ public class DatasourceController {
 	 * Get all data source list
 	 */
 	@GetMapping
+	@SaCheckPermission("datasource:view")
 	public List<Datasource> getAllDatasource(@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "type", required = false) String type) {
 
@@ -104,11 +105,13 @@ public class DatasourceController {
 	 * Get data source details by ID
 	 */
 	@GetMapping("/{id}")
+	@SaCheckPermission("datasource:view")
 	public Datasource getDatasourceById(@PathVariable Integer id) {
 		return checkDatasourceExists(id);
 	}
 
 	@GetMapping("/{id}/tables")
+	@SaCheckPermission("datasource:view")
 	public List<String> getDatasourceTables(@PathVariable Integer id) {
 		checkDatasourceExists(id);
 		try {
@@ -123,6 +126,7 @@ public class DatasourceController {
 	 * Create data source
 	 */
 	@PostMapping
+	@SaCheckPermission("datasource:create")
 	public Datasource createDatasource(@RequestBody Datasource datasource) {
 		try {
 			return datasourceService.createDatasource(datasource);
@@ -136,6 +140,7 @@ public class DatasourceController {
 	 * Update data source
 	 */
 	@PutMapping("/{id}")
+	@SaCheckPermission("datasource:update")
 	public Datasource updateDatasource(@PathVariable Integer id, @RequestBody Datasource datasource) {
 		checkDatasourceExists(id);
 		try {
@@ -150,6 +155,7 @@ public class DatasourceController {
 	 * Delete data source
 	 */
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("datasource:delete")
 	public ApiResponse deleteDatasource(@PathVariable Integer id) {
 		try {
 			checkDatasourceExists(id);
@@ -168,6 +174,7 @@ public class DatasourceController {
 	 * Test data source connection
 	 */
 	@PostMapping("/{id}/test")
+	@SaCheckPermission("datasource:create")
 	public ApiResponse testConnection(@PathVariable Integer id) {
 		try {
 			boolean success = datasourceService.testConnection(id);
@@ -182,6 +189,7 @@ public class DatasourceController {
 	 * 获取数据源表的字段列表
 	 */
 	@GetMapping("/{id}/tables/{tableName}/columns")
+	@SaCheckPermission("datasource:view")
 	public ApiResponse<List<String>> getTableColumns(@PathVariable Integer id, @PathVariable String tableName) {
 		try {
 			List<String> columns = datasourceService.getTableColumns(id, tableName);
@@ -196,6 +204,7 @@ public class DatasourceController {
 	 * 获取数据源的逻辑外键列表
 	 */
 	@GetMapping("/{id}/logical-relations")
+	@SaCheckPermission("datasource:view")
 	public ApiResponse<List<LogicalRelation>> getLogicalRelations(@PathVariable(value = "id") Integer datasourceId) {
 		try {
 			List<LogicalRelation> logicalRelations = datasourceService.getLogicalRelations(datasourceId);
@@ -211,6 +220,7 @@ public class DatasourceController {
 	 * 添加逻辑外键
 	 */
 	@PostMapping("/{id}/logical-relations")
+	@SaCheckPermission("datasource:create")
 	public ApiResponse<LogicalRelation> addLogicalRelation(@PathVariable(value = "id") Integer datasourceId,
 			@Valid @RequestBody CreateLogicalRelationDTO dto) {
 		try {
@@ -236,6 +246,7 @@ public class DatasourceController {
 	 * 更新逻辑外键
 	 */
 	@PutMapping("/{id}/logical-relations/{relationId}")
+	@SaCheckPermission("datasource:update")
 	public ApiResponse<LogicalRelation> updateLogicalRelation(@PathVariable(value = "id") Integer datasourceId,
 			@PathVariable Integer relationId, @RequestBody UpdateLogicalRelationDTO dto) {
 		try {
@@ -262,6 +273,7 @@ public class DatasourceController {
 	 * 删除逻辑外键
 	 */
 	@DeleteMapping("/{id}/logical-relations/{relationId}")
+	@SaCheckPermission("datasource:delete")
 	public ApiResponse<Void> deleteLogicalRelation(@PathVariable(value = "id") Integer datasourceId,
 			@PathVariable Integer relationId) {
 		try {
@@ -278,6 +290,7 @@ public class DatasourceController {
 	 * 批量保存逻辑外键（替换现有的所有外键）
 	 */
 	@PutMapping("/{id}/logical-relations")
+	@SaCheckPermission("datasource:update")
 	public ApiResponse<List<LogicalRelation>> saveLogicalRelations(@PathVariable(value = "id") Integer datasourceId,
 			@RequestBody List<LogicalRelation> logicalRelations) {
 		try {

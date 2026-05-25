@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.service.chat.SessionEventPublisher;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.vo.SessionUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class SessionEventController {
@@ -35,11 +35,11 @@ public class SessionEventController {
 	private final SessionEventPublisher sessionEventPublisher;
 
 	@GetMapping(value = "/agent/{agentId}/sessions/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@SaCheckPermission("chat:use")
 	public Flux<ServerSentEvent<SessionUpdateEvent>> streamSessionUpdates(@PathVariable Integer agentId,
 			ServerHttpResponse response) {
 		response.getHeaders().add("Cache-Control", "no-cache");
 		response.getHeaders().add("Connection", "keep-alive");
-		response.getHeaders().add("Access-Control-Allow-Origin", "*");
 
 		log.debug("Client subscribed to session update stream for agent {}", agentId);
 		return sessionEventPublisher.register(agentId)

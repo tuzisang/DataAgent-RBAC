@@ -22,8 +22,15 @@ import '@/styles/global.css';
 import 'element-plus/dist/index.css';
 import ElementPlus from 'element-plus';
 
+// 注册 Axios 拦截器
+import '@/plugins/axios';
+
+// 注册权限指令
+import vPermission from '@/directives/permission';
+
 // 创建应用实例
 const app = createApp(App);
 app.use(router);
 app.use(ElementPlus);
+app.directive('permission', vPermission);
 app.mount('#app');

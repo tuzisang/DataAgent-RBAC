@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.dto.schema.SemanticModelAddDTO;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.dto.schema.SemanticModelBatchImportDTO;
 import com.alibaba.cloud.ai.dataagent.entity.SemanticModel;
 import com.alibaba.cloud.ai.dataagent.service.semantic.SemanticModelService;
@@ -48,7 +49,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/semantic-model")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class SemanticModelController {
 
@@ -57,6 +57,7 @@ public class SemanticModelController {
 	private final SemanticModelService semanticModelService;
 
 	@GetMapping
+	@SaCheckPermission("semantic-model:view")
 	public ApiResponse<List<SemanticModel>> list(@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value = "agentId", required = false) Long agentId) {
 		List<SemanticModel> result;
@@ -73,12 +74,14 @@ public class SemanticModelController {
 	}
 
 	@GetMapping("/{id}")
+	@SaCheckPermission("semantic-model:view")
 	public ApiResponse<SemanticModel> get(@PathVariable(value = "id") Long id) {
 		SemanticModel model = semanticModelService.getById(id);
 		return ApiResponse.success("success retrieve semanticModel", model);
 	}
 
 	@PostMapping
+	@SaCheckPermission("semantic-model:create")
 	public ApiResponse<Boolean> create(@RequestBody @Validated SemanticModelAddDTO semanticModelAddDto) {
 		boolean success = semanticModelService.addSemanticModel(semanticModelAddDto);
 		if (success) {
@@ -90,6 +93,7 @@ public class SemanticModelController {
 	}
 
 	@PutMapping("/{id}")
+	@SaCheckPermission("semantic-model:update")
 	public ApiResponse<SemanticModel> update(@PathVariable(value = "id") Long id, @RequestBody SemanticModel model) {
 		if (semanticModelService.getById(id) == null) {
 			return ApiResponse.error("Semantic model not found");
@@ -100,6 +104,7 @@ public class SemanticModelController {
 	}
 
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("semantic-model:delete")
 	public ApiResponse<Boolean> delete(@PathVariable(value = "id") Long id) {
 		if (semanticModelService.getById(id) == null) {
 			return ApiResponse.error("Semantic model not found");
@@ -112,6 +117,7 @@ public class SemanticModelController {
 	 * 批量删除语义模型
 	 */
 	@DeleteMapping("/batch")
+	@SaCheckPermission("semantic-model:delete")
 	public ApiResponse<Boolean> batchDelete(@RequestBody @NotEmpty(message = "ID列表不能为空") List<Long> ids) {
 		semanticModelService.deleteSemanticModels(ids);
 		return ApiResponse.success("批量删除成功", true);
@@ -119,6 +125,7 @@ public class SemanticModelController {
 
 	// Enable
 	@PutMapping("/enable")
+	@SaCheckPermission("semantic-model:update")
 	public ApiResponse<Boolean> enableFields(@RequestBody @NotEmpty(message = "ID列表不能为空") List<Long> ids) {
 		semanticModelService.enableSemanticModels(ids);
 		return ApiResponse.success("Semantic models enabled successfully", true);
@@ -126,6 +133,7 @@ public class SemanticModelController {
 
 	// Disable
 	@PutMapping("/disable")
+	@SaCheckPermission("semantic-model:update")
 	public ApiResponse<Boolean> disableFields(@RequestBody @NotEmpty(message = "ID列表不能为空") List<Long> ids) {
 		ids.forEach(semanticModelService::disableSemanticModel);
 		return ApiResponse.success("Semantic models disabled successfully", true);
@@ -135,6 +143,7 @@ public class SemanticModelController {
 	 * 批量导入语义模型（JSON格式）
 	 */
 	@PostMapping("/batch-import")
+	@SaCheckPermission("semantic-model:create")
 	public ApiResponse<BatchImportResult> batchImport(@RequestBody @Valid SemanticModelBatchImportDTO dto) {
 		log.info("开始批量导入语义模型: agentId={}, 数量={}", dto.getAgentId(), dto.getItems().size());
 		BatchImportResult result = semanticModelService.batchImport(dto);
@@ -143,6 +152,7 @@ public class SemanticModelController {
 	}
 
 	@GetMapping("/template/download")
+	@SaCheckPermission("semantic-model:view")
 	public ResponseEntity<byte[]> downloadTemplate() {
 		try {
 			ClassPathResource resource = new ClassPathResource("excel/" + TEMPLATE_FILE_NAME);
@@ -168,6 +178,7 @@ public class SemanticModelController {
 	}
 
 	@PostMapping(value = "/import/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@SaCheckPermission("semantic-model:create")
 	public Mono<ApiResponse<BatchImportResult>> importExcel(@RequestPart("file") FilePart file,
 			@RequestPart("agentId") String agentId) {
 		Long agentIdLong = Long.parseLong(agentId);

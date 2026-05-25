@@ -25,9 +25,13 @@ public interface AgentService {
 
 	Agent findById(Long id);
 
+	Agent findByApiKey(String apiKey);
+
 	List<Agent> findByStatus(String status);
 
 	List<Agent> search(String keyword);
+
+	List<Agent> findByConditions(String status, String keyword, Long createdBy);
 
 	Agent save(Agent agent);
 

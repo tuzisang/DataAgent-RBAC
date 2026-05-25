@@ -76,6 +76,19 @@ class GraphService {
       params.append('humanFeedbackContent', request.humanFeedbackContent);
     }
 
+    // 从 localStorage 读取 token 并附加到 URL（EventSource 不支持自定义 Header）
+    try {
+      const raw = localStorage.getItem('dataagent_auth');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.token) {
+          params.append('token', parsed.token);
+        }
+      }
+    } catch {
+      // ignore
+    }
+
     const url = `${API_BASE_URL}/stream/search?${params.toString()}`;
 
     const eventSource = new EventSource(url);

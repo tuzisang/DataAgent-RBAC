@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.service.file.ByteArrayMultipartFile;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.vo.PageResult;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.AgentKnowledgeQueryDTO;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.agentknowledge.CreateKnowledgeDTO;
@@ -43,7 +44,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/agent-knowledge")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class AgentKnowledgeController {
 
@@ -53,6 +53,7 @@ public class AgentKnowledgeController {
 	 * Query knowledge details by ID
 	 */
 	@GetMapping("/{id}")
+	@SaCheckPermission("agent-knowledge:view")
 	public ApiResponse<AgentKnowledgeVO> getKnowledgeById(@PathVariable("id") Integer id) {
 		try {
 			AgentKnowledgeVO knowledge = agentKnowledgeService.getKnowledgeById(id);
@@ -73,6 +74,7 @@ public class AgentKnowledgeController {
 	 * Create knowledge,supporting file upload
 	 */
 	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@SaCheckPermission("agent-knowledge:create")
 	public Mono<ApiResponse<AgentKnowledgeVO>> createKnowledge(@RequestPart("agentId") String agentId,
 			@RequestPart("title") String title, @RequestPart("type") String type,
 			@RequestPart(value = "question", required = false) String question,
@@ -127,6 +129,7 @@ public class AgentKnowledgeController {
 	 * Update knowledge
 	 */
 	@PutMapping("/{id}")
+	@SaCheckPermission("agent-knowledge:update")
 	public ApiResponse<AgentKnowledgeVO> updateKnowledge(@PathVariable("id") Integer id,
 			@RequestBody UpdateKnowledgeDTO updateKnowledgeDto) {
 		AgentKnowledgeVO knowledge = agentKnowledgeService.updateKnowledge(id, updateKnowledgeDto);
@@ -134,6 +137,7 @@ public class AgentKnowledgeController {
 	}
 
 	@PutMapping("/recall/{id}")
+	@SaCheckPermission("agent-knowledge:update")
 	public ApiResponse<AgentKnowledgeVO> updateRecallStatus(@PathVariable Integer id,
 			@RequestParam(value = "isRecall") Boolean isRecall) {
 		AgentKnowledgeVO agentKnowledgeVO = agentKnowledgeService.updateKnowledgeRecallStatus(id, isRecall);
@@ -144,12 +148,14 @@ public class AgentKnowledgeController {
 	 * Delete knowledge
 	 */
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("agent-knowledge:delete")
 	public ApiResponse<Boolean> deleteKnowledge(@PathVariable("id") Integer id) {
 		return agentKnowledgeService.deleteKnowledge(id) ? ApiResponse.success("删除操作已接收，等待后台删除相关资源...")
 				: ApiResponse.error("删除失败");
 	}
 
 	@PostMapping("/query/page")
+	@SaCheckPermission("agent-knowledge:view")
 	public PageResponse<List<AgentKnowledgeVO>> queryByPage(@Valid @RequestBody AgentKnowledgeQueryDTO queryDTO) {
 		try {
 			PageResult<AgentKnowledgeVO> pageResult = agentKnowledgeService.queryByConditionsWithPage(queryDTO);
@@ -163,6 +169,7 @@ public class AgentKnowledgeController {
 	}
 
 	@PostMapping("/retry-embedding/{id}")
+	@SaCheckPermission("agent-knowledge:update")
 	public ApiResponse<AgentKnowledgeVO> retryEmbedding(@PathVariable Integer id) {
 		agentKnowledgeService.retryEmbedding(id);
 		return ApiResponse.success("重试向量化操作成功，如果是文件解析需要花费点时间，请耐心等待...");

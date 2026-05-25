@@ -15,6 +15,7 @@
  */
 package com.alibaba.cloud.ai.dataagent.service.agent;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.cloud.ai.dataagent.entity.Agent;
 import com.alibaba.cloud.ai.dataagent.mapper.AgentMapper;
 import com.alibaba.cloud.ai.dataagent.service.file.FileStorageService;
@@ -53,6 +54,11 @@ public class AgentServiceImpl implements AgentService {
 	}
 
 	@Override
+	public Agent findByApiKey(String apiKey) {
+		return agentMapper.findByApiKey(apiKey);
+	}
+
+	@Override
 	public List<Agent> findByStatus(String status) {
 		return agentMapper.findByStatus(status);
 	}
@@ -60,6 +66,11 @@ public class AgentServiceImpl implements AgentService {
 	@Override
 	public List<Agent> search(String keyword) {
 		return agentMapper.searchByKeyword(keyword);
+	}
+
+	@Override
+	public List<Agent> findByConditions(String status, String keyword, Long createdBy) {
+		return agentMapper.findByConditionsWithCreator(status, keyword, createdBy);
 	}
 
 	@Override
@@ -72,6 +83,15 @@ public class AgentServiceImpl implements AgentService {
 			agent.setUpdateTime(now);
 			if (agent.getApiKeyEnabled() == null) {
 				agent.setApiKeyEnabled(0);
+			}
+			// Inject current user as creator
+			try {
+				Object loginId = StpUtil.getLoginIdDefaultNull();
+				if (loginId != null) {
+					agent.setCreatedBy(Long.valueOf(loginId.toString()));
+				}
+			}
+			catch (Exception ignored) {
 			}
 
 			agentMapper.insert(agent);

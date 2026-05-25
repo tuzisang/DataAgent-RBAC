@@ -350,6 +350,19 @@
             <artifactId>docker-java-transport-zerodep</artifactId>
         </dependency>
 
+        <!-- Sa-Token 权限认证（Reactor响应式集成） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
+            <version>1.44.0</version>
+        </dependency>
+        <!-- Sa-Token Redis 持久化（可选，多实例部署必需） -->
+        <!-- Spring Security Crypto（BCrypt 密码哈希） -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
     </dependencies>
     <repositories>
         <repository>

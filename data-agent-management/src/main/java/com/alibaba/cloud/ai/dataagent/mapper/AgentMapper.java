@@ -113,4 +113,28 @@ public interface AgentMapper {
 			""")
 	int deleteById(Long id);
 
+	@Select("SELECT * FROM agent WHERE api_key = #{apiKey} LIMIT 1")
+	Agent findByApiKey(@Param("apiKey") String apiKey);
+
+	@Select("""
+			<script>
+				SELECT * FROM agent
+				<where>
+					<if test='status != null and status != ""'>
+						AND status = #{status}
+					</if>
+					<if test='keyword != null and keyword != ""'>
+						AND (name LIKE CONCAT('%', #{keyword}, '%')
+							 OR description LIKE CONCAT('%', #{keyword}, '%')
+							 OR tags LIKE CONCAT('%', #{keyword}, '%'))
+					</if>
+					<if test='createdBy != null'>
+						AND created_by = #{createdBy}
+					</if>
+				</where>
+				ORDER BY create_time DESC
+			</script>
+			""")
+	List<Agent> findByConditionsWithCreator(@Param("status") String status, @Param("keyword") String keyword, @Param("createdBy") Long createdBy);
+
 }

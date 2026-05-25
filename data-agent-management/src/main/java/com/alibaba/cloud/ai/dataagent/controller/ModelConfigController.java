@@ -15,6 +15,7 @@
  */
 package com.alibaba.cloud.ai.dataagent.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.enums.ModelType;
 import com.alibaba.cloud.ai.dataagent.dto.ModelConfigDTO;
 import com.alibaba.cloud.ai.dataagent.service.aimodelconfig.ModelConfigDataService;
@@ -38,6 +39,7 @@ public class ModelConfigController {
 
 	// 1. 获取列表
 	@GetMapping("/list")
+	@SaCheckPermission("model-config:view")
 	public ApiResponse<List<ModelConfigDTO>> list() {
 		try {
 			return ApiResponse.success("获取模型配置列表成功", modelConfigDataService.listConfigs());
@@ -49,6 +51,7 @@ public class ModelConfigController {
 
 	// 2. 新增配置
 	@PostMapping("/add")
+	@SaCheckPermission("model-config:manage")
 	public ApiResponse<String> add(@Valid @RequestBody ModelConfigDTO config) {
 		try {
 			modelConfigDataService.addConfig(config);
@@ -61,6 +64,7 @@ public class ModelConfigController {
 
 	// 3. 修改配置
 	@PutMapping("/update")
+	@SaCheckPermission("model-config:manage")
 	public ApiResponse<String> update(@Valid @RequestBody ModelConfigDTO config) {
 		try {
 			modelConfigOpsService.updateAndRefresh(config);
@@ -73,6 +77,7 @@ public class ModelConfigController {
 
 	// 4. 删除配置
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("model-config:manage")
 	public ApiResponse<String> delete(@PathVariable Integer id) {
 		try {
 			modelConfigDataService.deleteConfig(id);
@@ -85,6 +90,7 @@ public class ModelConfigController {
 
 	// 5. 启用/切换配置
 	@PostMapping("/activate/{id}")
+	@SaCheckPermission("model-config:manage")
 	public ApiResponse<String> activate(@PathVariable Integer id) {
 		try {
 			modelConfigOpsService.activateConfig(id);
@@ -99,6 +105,7 @@ public class ModelConfigController {
 	 * 6. 连通性测试 接收前端表单里的配置参数，尝试发起一次真实调用
 	 */
 	@PostMapping("/test")
+	@SaCheckPermission("model-config:manage")
 	public ApiResponse<String> testConnection(@Valid @RequestBody ModelConfigDTO config) {
 		try {
 			modelConfigOpsService.testConnection(config);
@@ -114,6 +121,7 @@ public class ModelConfigController {
 	 * 7. 检查模型配置是否就绪（聊天模型和嵌入模型都需要配置）
 	 */
 	@GetMapping("/check-ready")
+	@SaCheckPermission("model-config:view")
 	public ApiResponse<ModelCheckVo> checkReady() {
 		// 检查聊天模型是否已配置且启用
 		ModelConfigDTO chatModel = modelConfigDataService.getActiveConfigByType(ModelType.CHAT);

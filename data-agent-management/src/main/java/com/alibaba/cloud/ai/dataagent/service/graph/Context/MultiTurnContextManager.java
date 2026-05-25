@@ -83,7 +83,8 @@ public class MultiTurnContextManager {
 		String plan = StringUtils.trimToEmpty(pending.planBuilder.toString());
 		if (StringUtils.isBlank(plan)) {
 			log.debug("No planner output recorded for thread {}, skipping history update", threadId);
-			return;
+			plan = "(本轮未形成完整计划，记录用户问题用于后续追问理解)";
+			//return;
 		}
 
 		String trimmedPlan = StringUtils.abbreviate(plan, properties.getMaxplanlength());

@@ -15,6 +15,9 @@
  */
 package com.alibaba.cloud.ai.dataagent.controller;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
 import com.alibaba.cloud.ai.dataagent.exception.InternalServerException;
 import com.alibaba.cloud.ai.dataagent.exception.InvalidInputException;
 import com.alibaba.cloud.ai.dataagent.vo.ApiResponse;
@@ -43,6 +46,27 @@ public class GlobalExceptionHandler {
 	public ApiResponse<Object> handleInternalServerException(InternalServerException e) {
 		log.error("Internal server error: {}", e.getMessage(), e);
 		return ApiResponse.error(e.getMessage());
+	}
+
+	@ExceptionHandler(NotLoginException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ApiResponse<Object> handleNotLoginException(NotLoginException e) {
+		log.warn("Not login: {}", e.getMessage());
+		return ApiResponse.error(401, "未登录");
+	}
+
+	@ExceptionHandler(NotPermissionException.class)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ApiResponse<Object> handleNotPermissionException(NotPermissionException e) {
+		log.warn("No permission: {}", e.getMessage());
+		return ApiResponse.error(403, "无此权限: " + e.getPermission());
+	}
+
+	@ExceptionHandler(NotRoleException.class)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ApiResponse<Object> handleNotRoleException(NotRoleException e) {
+		log.warn("No role: {}", e.getMessage());
+		return ApiResponse.error(403, "需要角色: " + e.getRole());
 	}
 
 	@ExceptionHandler(Exception.class)

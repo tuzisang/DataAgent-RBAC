@@ -10,9 +10,9 @@ springdoc:
 # 存储 DataAgent 业务数据的数据库，并非Agent分析数据的来源
 spring:
   datasource:
-    url: ${DATA_AGENT_DATASOURCE_URL:jdbc:mysql://localhost/saa_data_agent2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai}
+    url: ${DATA_AGENT_DATASOURCE_URL:jdbc:mysql://localhost:3306/saa_data_agent2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&allowMultiQueries=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai}
     username: ${DATA_AGENT_DATASOURCE_USERNAME:root}
-    password: ${DATA_AGENT_DATASOURCE_PASSWORD:123}
+    password: ${DATA_AGENT_DATASOURCE_PASSWORD:2302200}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   sql:
@@ -78,4 +78,28 @@ logging:
     com.alibaba.cloud.ai.dataagent.workflow.node: debug
     com.alibaba.cloud.ai.mapper: debug
     org.springframework.jdbc: debug
+
+# Sa-Token 配置
+sa-token:
+  # Token 名称
+  token-name: Authorization
+  # Token 前缀
+  token-prefix: Bearer
+  # Token 有效期（单位：秒），默认30天
+  timeout: 2592000
+  # Token 临时有效期（指定时间内无操作就视为过期），单位：秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录（为 true 时允许一起登录，为 false 时新登录挤掉旧登录）
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个 token（为 true 时所有登录共用一个 token，为 false 时每次登录新建一个 token）
+  is-share: false
+  # Token 风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+
+# CORS 白名单（多个用逗号分隔）
+data-agent:
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:8080,http://127.0.0.1:5173,http://127.0.0.1:3001
 

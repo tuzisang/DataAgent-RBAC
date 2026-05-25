@@ -16,6 +16,7 @@
 package com.alibaba.cloud.ai.dataagent.controller;
 
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.CreateBusinessKnowledgeDTO;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.alibaba.cloud.ai.dataagent.dto.knowledge.businessknowledge.UpdateBusinessKnowledgeDTO;
 import com.alibaba.cloud.ai.dataagent.service.business.BusinessKnowledgeService;
 import com.alibaba.cloud.ai.dataagent.vo.ApiResponse;
@@ -31,13 +32,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/business-knowledge")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class BusinessKnowledgeController {
 
 	private final BusinessKnowledgeService businessKnowledgeService;
 
 	@GetMapping
+	@SaCheckPermission("business-knowledge:view")
 	public ApiResponse<List<BusinessKnowledgeVO>> list(@RequestParam(value = "agentId") String agentIdStr,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		List<BusinessKnowledgeVO> result;
@@ -53,6 +54,7 @@ public class BusinessKnowledgeController {
 	}
 
 	@GetMapping("/{id}")
+	@SaCheckPermission("business-knowledge:view")
 	public ApiResponse<BusinessKnowledgeVO> get(@PathVariable(value = "id") Long id) {
 		BusinessKnowledgeVO vo = businessKnowledgeService.getKnowledgeById(id);
 		if (vo == null) {
@@ -62,12 +64,14 @@ public class BusinessKnowledgeController {
 	}
 
 	@PostMapping
+	@SaCheckPermission("business-knowledge:create")
 	public ApiResponse<BusinessKnowledgeVO> create(@RequestBody @Validated CreateBusinessKnowledgeDTO knowledge) {
 		return ApiResponse.success("success create businessKnowledge",
 				businessKnowledgeService.addKnowledge(knowledge));
 	}
 
 	@PutMapping("/{id}")
+	@SaCheckPermission("business-knowledge:update")
 	public ApiResponse<BusinessKnowledgeVO> update(@PathVariable(value = "id") Long id,
 			@RequestBody UpdateBusinessKnowledgeDTO knowledge) {
 
@@ -76,6 +80,7 @@ public class BusinessKnowledgeController {
 	}
 
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("business-knowledge:delete")
 	public ApiResponse<Boolean> delete(@PathVariable(value = "id") Long id) {
 		if (businessKnowledgeService.getKnowledgeById(id) == null) {
 			return ApiResponse.error("businessKnowledge not found");
@@ -85,6 +90,7 @@ public class BusinessKnowledgeController {
 	}
 
 	@PostMapping("/recall/{id}")
+	@SaCheckPermission("business-knowledge:update")
 	public ApiResponse<Boolean> recallKnowledge(@PathVariable(value = "id") Long id,
 			@RequestParam(value = "isRecall") Boolean isRecall) {
 		businessKnowledgeService.recallKnowledge(id, isRecall);
@@ -92,6 +98,7 @@ public class BusinessKnowledgeController {
 	}
 
 	@PostMapping("/refresh-vector-store")
+	@SaCheckPermission("business-knowledge:update")
 	public ApiResponse<Boolean> refreshAllKnowledgeToVectorStore(@RequestParam(value = "agentId") String agentId) {
 		// 校验 agentId 不为空和空字符串
 		if (!StringUtils.hasText(agentId)) {
@@ -109,6 +116,7 @@ public class BusinessKnowledgeController {
 	}
 
 	@PostMapping("/retry-embedding/{id}")
+	@SaCheckPermission("business-knowledge:update")
 	public ApiResponse<Boolean> retryEmbedding(@PathVariable(value = "id") Long id) {
 		businessKnowledgeService.retryEmbedding(id);
 		return ApiResponse.success("success retry embedding");

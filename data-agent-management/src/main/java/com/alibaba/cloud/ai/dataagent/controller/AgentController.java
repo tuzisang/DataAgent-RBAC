@@ -15,6 +15,8 @@
  */
 package com.alibaba.cloud.ai.dataagent.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.cloud.ai.dataagent.entity.Agent;
 import com.alibaba.cloud.ai.dataagent.service.agent.AgentService;
 import com.alibaba.cloud.ai.dataagent.vo.ApiKeyResponse;
@@ -24,7 +26,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,112 +41,156 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @RestController
 @RequestMapping("/api/agent")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class AgentController {
 
 	private final AgentService agentService;
 
+	private boolean isAdmin() {
+		List<String> roles = StpUtil.getRoleList();
+		return roles.contains("super-admin") || roles.contains("admin");
+	}
+
+	private void checkOwnership(Agent agent) {
+		if (isAdmin()) {
+			return;
+		}
+		Long userId = Long.valueOf(StpUtil.getLoginId().toString());
+		if (agent.getCreatedBy() == null || !agent.getCreatedBy().equals(userId)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "无权操作此资源");
+		}
+	}
+
 	/** Get agent list */
 	@GetMapping("/list")
+	@SaCheckPermission("agent:view")
 	public List<Agent> list(@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		List<Agent> result;
-		if (StringUtils.isNotBlank(keyword)) {
-			result = agentService.search(keyword);
-		}
-		else if (StringUtils.isNotBlank(status)) {
-			result = agentService.findByStatus(status);
+		if (isAdmin()) {
+			if (StringUtils.isNotBlank(keyword)) {
+				result = agentService.search(keyword);
+			}
+			else if (StringUtils.isNotBlank(status)) {
+				result = agentService.findByStatus(status);
+			}
+			else {
+				result = agentService.findAll();
+			}
 		}
 		else {
-			result = agentService.findAll();
+			Long userId = Long.valueOf(StpUtil.getLoginId().toString());
+			result = agentService.findByConditions(status, keyword, userId);
 		}
 		return result;
 	}
 
 	/** Get agent details by ID */
 	@GetMapping("/{id}")
+	@SaCheckPermission("agent:view")
 	public Agent get(@PathVariable Long id) {
-		return checkAgentExists(id);
+		Agent agent = checkAgentExists(id);
+		checkOwnership(agent);
+		return agent;
 	}
 
 	/** Create agent */
 	@PostMapping
+	@SaCheckPermission("agent:create")
 	public Agent create(@RequestBody Agent agent) {
-		// Set default status
 		if (StringUtils.isBlank(agent.getStatus())) {
 			agent.setStatus("draft");
 		}
+		Long userId = Long.valueOf(StpUtil.getLoginId().toString());
+		agent.setCreatedBy(userId);
 		return agentService.save(agent);
 	}
 
 	/** Update agent */
 	@PutMapping("/{id}")
+	@SaCheckPermission("agent:update")
 	public Agent update(@PathVariable Long id, @RequestBody Agent agent) {
-		checkAgentExists(id);
+		Agent existing = checkAgentExists(id);
+		checkOwnership(existing);
 		agent.setId(id);
 		return agentService.save(agent);
 	}
 
 	/** Delete agent */
 	@DeleteMapping("/{id}")
+	@SaCheckPermission("agent:delete")
 	public void delete(@PathVariable Long id) {
-		checkAgentExists(id);
+		Agent existing = checkAgentExists(id);
+		checkOwnership(existing);
 		agentService.deleteById(id);
 	}
 
 	/** Publish agent */
 	@PostMapping("/{id}/publish")
+	@SaCheckPermission("agent:publish")
 	public Agent publish(@PathVariable Long id) {
 		Agent agent = checkAgentExists(id);
+		checkOwnership(agent);
 		agent.setStatus("published");
 		return agentService.save(agent);
 	}
 
 	/** Offline agent */
 	@PostMapping("/{id}/offline")
+	@SaCheckPermission("agent:publish")
 	public Agent offline(@PathVariable Long id) {
 		Agent agent = checkAgentExists(id);
+		checkOwnership(agent);
 		agent.setStatus("offline");
 		return agentService.save(agent);
 	}
 
 	/** Get masked API Key status */
 	@GetMapping("/{id}/api-key")
+	@SaCheckPermission("agent:apikey")
 	public ApiResponse<ApiKeyResponse> getApiKey(@PathVariable Long id) {
 		Agent agent = checkAgentExists(id);
+		checkOwnership(agent);
 		String masked = agentService.getApiKeyMasked(id);
 		return buildApiKeyResponse(masked, agent.getApiKeyEnabled(), "获取 API Key 成功");
 	}
 
 	/** Generate API Key */
 	@PostMapping("/{id}/api-key/generate")
+	@SaCheckPermission("agent:apikey")
 	public ApiResponse<ApiKeyResponse> generateApiKey(@PathVariable Long id) {
-		checkAgentExists(id);
+		Agent existing = checkAgentExists(id);
+		checkOwnership(existing);
 		Agent agent = agentService.generateApiKey(id);
 		return buildApiKeyResponse(agent.getApiKey(), agent.getApiKeyEnabled(), "生成 API Key 成功");
 	}
 
 	/** Reset API Key */
 	@PostMapping("/{id}/api-key/reset")
+	@SaCheckPermission("agent:apikey")
 	public ApiResponse<ApiKeyResponse> resetApiKey(@PathVariable Long id) {
-		checkAgentExists(id);
+		Agent existing = checkAgentExists(id);
+		checkOwnership(existing);
 		Agent agent = agentService.resetApiKey(id);
 		return buildApiKeyResponse(agent.getApiKey(), agent.getApiKeyEnabled(), "重置 API Key 成功");
 	}
 
 	/** Delete API Key */
 	@DeleteMapping("/{id}/api-key")
+	@SaCheckPermission("agent:apikey")
 	public ApiResponse<ApiKeyResponse> deleteApiKey(@PathVariable Long id) {
-		checkAgentExists(id);
+		Agent existing = checkAgentExists(id);
+		checkOwnership(existing);
 		Agent agent = agentService.deleteApiKey(id);
 		return buildApiKeyResponse(agent.getApiKey(), agent.getApiKeyEnabled(), "删除 API Key 成功");
 	}
 
 	/** Toggle API Key enable flag */
 	@PostMapping("/{id}/api-key/enable")
+	@SaCheckPermission("agent:apikey")
 	public ApiResponse<ApiKeyResponse> toggleApiKey(@PathVariable Long id, @RequestParam("enabled") boolean enabled) {
-		checkAgentExists(id);
+		Agent existing = checkAgentExists(id);
+		checkOwnership(existing);
 		Agent agent = agentService.toggleApiKey(id, enabled);
 		return buildApiKeyResponse(agent.getApiKey() == null ? null : "****", agent.getApiKeyEnabled(),
 				"更新 API Key 状态成功");

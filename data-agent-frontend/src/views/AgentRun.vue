@@ -219,7 +219,7 @@
                 :onQuestionClick="handlePresetQuestionClick"
               />
               <div class="switch-group">
-                <div class="switch-item">
+                <div class="switch-item" v-if="false">
                   <span class="switch-label">人工反馈</span>
                   <el-tooltip
                     :disabled="!requestOptions.nl2sqlOnly"
@@ -232,7 +232,7 @@
                     />
                   </el-tooltip>
                 </div>
-                <div class="switch-item">
+                <div class="switch-item" v-if="false">
                   <span class="switch-label">仅NL2SQL</span>
                   <el-switch
                     v-model="requestOptions.nl2sqlOnly"
@@ -513,7 +513,7 @@
       });
       const requestOptions = ref({
         humanFeedback: false,
-        nl2sqlOnly: false,
+        nl2sqlOnly: true,
         reportFormat: 'markdown' as 'markdown' | 'html', // 'markdown' | 'html'，控制报告展示方式
       });
       const showReportFullscreen = ref(false);
