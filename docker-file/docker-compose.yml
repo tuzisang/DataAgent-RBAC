@@ -46,7 +46,7 @@ services:
       - DATA_AGENT_DATASOURCE_SQL_INIT=always
       - AI_DASHSCOPE_API_KEY=${AI_DASHSCOPE_API_KEY}
     ports:
-      - "8065:8065"
+      - "8066:8066"
     depends_on:
       mysql:
         condition: service_healthy

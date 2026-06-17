@@ -61,7 +61,7 @@ RUN apt update && apt install -y python3
 # 创建配置文件目录
 RUN mkdir -p /app/config
 
-EXPOSE 8065
+EXPOSE 8066
 
 # 启动命令，优先使用外部配置文件
 ENTRYPOINT ["java", "-jar", "app.jar", "--spring.config.location=classpath:application.yml,optional:file:/app/config/application.yml"]
