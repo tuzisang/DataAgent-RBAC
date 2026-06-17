@@ -94,12 +94,19 @@ public class SaTokenConfigure {
 
 	/**
 	 * 全局 CORS 配置（替代所有 @CrossOrigin）
+	 * 在 SaReactorFilter 之前执行，确保 OPTIONS 预检请求能被正确应答
 	 */
 	@Bean
+	@Order(-1)
 	public CorsWebFilter corsWebFilter() {
 		CorsConfiguration config = new CorsConfiguration();
 		List<String> origins = Arrays.asList(allowedOrigins.split(","));
-		config.setAllowedOrigins(origins);
+		// 支持通配符模式（如 "http://*"），对部署到未知域名的场景更友好
+		if (origins.stream().anyMatch(o -> o.contains("*"))) {
+			config.setAllowedOriginPatterns(origins);
+		} else {
+			config.setAllowedOrigins(origins);
+		}
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowCredentials(true);
